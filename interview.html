@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSB COMMAND — AI Interview Simulator</title>
+<style>
+:root{--bg:#08111f;--panel:#101d30;--panel2:#15243a;--line:#263a55;--text:#edf4ff;--muted:#9fb1c9;--gold:#e7b95e;--green:#54d6a0;--red:#ff7777}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0%,#18304b 0,#08111f 42%);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{display:flex;justify-content:space-between;align-items:center;padding:18px 5%;border-bottom:1px solid var(--line);background:#08111fdd;position:sticky;top:0;z-index:5}
+.brand{font-weight:900;letter-spacing:2px}.brand span{color:var(--gold)}.badge{border:1px solid #49617d;border-radius:30px;padding:6px 12px;color:var(--muted);font-size:12px}
+main{max-width:1180px;margin:34px auto;padding:0 20px}.hero{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:25px}.eyebrow{color:var(--gold);font-weight:800;letter-spacing:2px;font-size:12px}.hero h1{font-size:clamp(30px,5vw,48px);line-height:1.08;margin:8px 0}.hero p{color:var(--muted);max-width:650px;margin:0}
+.grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}.card{background:linear-gradient(145deg,var(--panel),#0d1929);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 16px 45px #0003}.card h2{font-size:18px;margin:0 0 14px}.muted{color:var(--muted)}label{display:block;font-size:13px;color:#c6d4e7;margin:12px 0 6px}input,textarea,select{width:100%;background:#091525;color:var(--text);border:1px solid #304661;border-radius:10px;padding:11px 12px;font:inherit;outline:none}textarea{min-height:78px;resize:vertical}input:focus,textarea:focus{border-color:var(--gold)}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn{border:0;border-radius:11px;padding:12px 17px;font-weight:800;cursor:pointer;background:var(--gold);color:#1a1b1e}.btn.secondary{background:#1b2d44;color:var(--text);border:1px solid #3a526f}.btn.danger{background:#49242b;color:#ffdede;border:1px solid #87434b}.btn:disabled{opacity:.45;cursor:not-allowed}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
+.note{font-size:12px;color:var(--muted);margin-top:12px}.camera{background:#050a11;border:1px solid #344963;border-radius:14px;overflow:hidden;aspect-ratio:16/9;display:grid;place-items:center;color:#8295ac}.camera video{width:100%;height:100%;object-fit:cover;display:none;transform:scaleX(-1)}
+.interview{display:none}.interview-layout{display:grid;grid-template-columns:1fr 300px;gap:18px}.officer{display:flex;gap:14px;align-items:center;margin-bottom:18px}.avatar{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#d9b36a,#73502c);display:grid;place-items:center;color:#172033;font-size:24px;font-weight:900}.question{font-size:24px;font-weight:750;line-height:1.3;margin:22px 0}.answer{min-height:130px}.timer{font-variant-numeric:tabular-nums;color:var(--gold);font-size:24px;font-weight:900}.stat{background:#0a1727;border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:10px}.stat strong{display:block;font-size:20px}.progress{height:7px;background:#24364d;border-radius:20px;overflow:hidden;margin-top:12px}.progress div{height:100%;width:0;background:var(--green);transition:width .3s}.report{display:none}.report h2{color:var(--green)}.report-box{background:#091525;border:1px solid var(--line);padding:15px;border-radius:12px;margin:10px 0}.footer{color:#72859d;text-align:center;padding:30px 10px;font-size:12px}
+@media(max-width:850px){.grid,.interview-layout{grid-template-columns:1fr}.hero{display:block}.row{grid-template-columns:1fr}.card{padding:17px}}
+</style>
+</head>
+<body>
+<header><div class="brand">SSB <span>COMMAND</span></div><div class="badge">PRACTICE SIMULATOR · BETA</div></header>
+<main>
+<section class="hero">
+ <div><div class="eyebrow">OFFICER-LIKE INTERVIEW PRACTICE</div><h1>Prepare with purpose.<br><span style="color:var(--gold)">Answer with clarity.</span></h1><p>A browser-based mock SSB personal interview with a 45-minute session, webcam preview, spoken questions, microphone input, follow-up questions and a practice report.</p></div>
+</section>
+<section id="setup" class="grid">
+ <div class="card">
+  <h2>01 / Candidate profile</h2>
+  <p class="muted">Add a few details so the questions can be tailored to your background. Use truthful information; this is practice, not a test of memorised answers.</p>
+  <div class="row"><div><label>Your name</label><input id="name" placeholder="Candidate name"></div><div><label>Entry</label><select id="entry"><option>NDA</option><option>TES</option><option>CDS</option><option>Other</option></select></div></div>
+  <label>Education and subjects</label><input id="education" placeholder="e.g. Class 12, Physics, Chemistry, Maths">
+  <label>Family background</label><textarea id="family" placeholder="Briefly describe your family and what they do"></textarea>
+  <label>Hobbies, sports and achievements</label><textarea id="hobbies" placeholder="e.g. reading, running, sports captain, certificates"></textarea>
+  <label>Why do you want to join the Armed Forces?</label><textarea id="motivation" placeholder="Write your genuine reason in a few sentences"></textarea>
+  <label>One strength and one area you are improving</label><textarea id="traits" placeholder="Be specific and give real examples"></textarea>
+  <div class="actions"><button class="btn" id="start">START 45-MINUTE INTERVIEW</button></div>
+  <div class="note">Your profile is used in this browser session to select practice questions. Do not enter passwords, contact details or other sensitive information.</div>
+ </div>
+ <div class="card">
+  <h2>02 / Camera and audio</h2>
+  <div class="camera"><video id="video" autoplay muted playsinline></video><span id="cameraText">Camera preview will appear here</span></div>
+  <div class="actions"><button class="btn secondary" id="cameraBtn">ENABLE CAMERA</button><button class="btn secondary" id="testVoice">TEST OFFICER VOICE</button></div>
+  <div class="note">Camera preview stays in this page; this prototype does not record or upload video. Microphone speech recognition depends on browser support and may be processed by the browser's speech service. You can type answers instead.</div>
+  <div class="stat"><span class="muted">Interview format</span><strong>45 minutes · PI-focused</strong></div>
+  <div class="stat"><span class="muted">Practice areas</span><strong>Personal · Education · Family · Motivation · Awareness</strong></div>
+ </div>
+</section>
+
+<section id="interview" class="interview">
+ <div class="interview-layout">
+  <div class="card">
+   <div class="officer"><div class="avatar" id="officerAvatar">IO</div><div><b id="officerTitle">Interviewing Officer</b><div class="muted" id="officerStatus">Waiting for your response</div><div class="muted" id="officerRole">Officer profile will be selected for this session</div></div></div>
+   <div class="eyebrow" id="phase">PERSONAL INTERVIEW</div>
+   <div class="question" id="question">Tell me about yourself.</div>
+   <label for="answer">Your response</label><textarea class="answer" id="answer" placeholder="Type your answer here, or use the microphone button..."></textarea>
+   <div class="actions"><button class="btn secondary" id="mic">USE MICROPHONE</button><button class="btn" id="submit">SUBMIT ANSWER</button><button class="btn secondary" id="skip">SKIP</button></div>
+   <div class="note" id="micStatus">Speak naturally and answer with real examples. There is no model-generated assessment of your personality.</div>
+  </div>
+  <aside class="card">
+   <h2>Session monitor</h2><div class="timer" id="timer">45:00</div><div class="progress"><div id="progress"></div></div>
+   <div class="stat"><span class="muted">Questions answered</span><strong id="count">0</strong></div>
+   <div class="stat"><span class="muted">Current section</span><strong id="sectionStat">Personal</strong></div>
+   <div class="stat"><span class="muted">Session guidance</span><p class="muted" style="margin:5px 0 0">Be direct. Support claims with examples. If you do not know something, say so honestly.</p></div>
+   <div class="actions"><button class="btn danger" id="end">END INTERVIEW</button></div>
+  </aside>
+ </div>
+</section>
+
+<section id="report" class="report card" style="margin-top:18px">
+ <div class="eyebrow">SESSION COMPLETE</div><h2>Practice report</h2><p class="muted">This report summarises your session. It is not an official SSB recommendation or a validated psychological assessment.</p>
+ <div class="row"><div class="report-box"><span class="muted">Questions answered</span><strong id="rCount">0</strong></div><div class="report-box"><span class="muted">Session duration</span><strong id="rTime">0 min</strong></div></div>
+ <div class="report-box"><h3>Review your answers</h3><div id="review"></div></div>
+ <div class="report-box"><h3>Self-review checklist</h3><ul><li>Did I answer the exact question asked?</li><li>Did I give a specific, truthful example?</li><li>Were my answers consistent with my PIQ?</li><li>Did I acknowledge weaknesses and explain how I am improving?</li><li>Did I avoid exaggeration and memorised speeches?</li></ul></div>
+ <div class="actions"><button class="btn" id="download">DOWNLOAD SESSION REPORT</button><button class="btn secondary" onclick="location.reload()">NEW INTERVIEW</button></div>
+</section>
+<div class="footer">SSB COMMAND is an independent practice tool, not affiliated with Services Selection Board, UPSC or the Indian Armed Forces.</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+let stream=null,recognition=null,timerId=null,seconds=2700,answered=0,history=[],current=0,startedAt=0,questions=[],ended=false,selectedOfficer=null;
+const base=[
+["Introduction","Tell me about yourself. Keep it brief and cover the important parts of your life."],
+["Family","Tell me about your family. What have you learnt from them?"],
+["Education","Which subject do you enjoy most, and why?"],
+["Education","Which subject do you find difficult? What are you doing to improve?"],
+["Personal","What are your three strengths? Give me an example of each."],
+["Personal","What is one weakness you are actively working to improve?"],
+["Friends","How would your closest friends describe you? What might they criticise?"],
+["Responsibilities","Tell me about a responsibility you have handled. What was the outcome?"],
+["Motivation","Why do you want to join the Armed Forces?"],
+["Motivation","Why have you chosen the NDA entry?"],
+["Awareness","Tell me about one recent national or international issue you have followed. What is your opinion?"],
+["Goals","What is your alternative career plan if you are not selected?"],
+["Reflection","What have you done recently to improve yourself?"],
+["Reflection","What is one decision you would handle differently today, and why?"],
+["Closing","Is there anything important about you that I have not asked?"]
+];
+function buildQuestions(){
+ const q=[...base];
+ const h=$('hobbies').value.trim(), f=$('family').value.trim(), e=$('education').value.trim(), m=$('motivation').value.trim(), t=$('traits').value.trim();
+ if(h)q.splice(7,0,["Activities","You mentioned your activities and achievements. Which one matters most to you, and what was your personal contribution?"]);
+ if(f)q.splice(3,0,["Family follow-up","How has your family influenced the way you handle responsibility?"]);
+ if(e)q.splice(5,0,["Education follow-up","What would your teachers say is your strongest quality as a student?"]);
+ if(m)q.splice(10,0,["Motivation follow-up","You have explained your motivation. What have you done to test whether military life suits you?"]);
+ if(t)q.splice(6,0,["Self-awareness follow-up","Give me a recent example that demonstrates the strength you mentioned."]);
+ return q;
+}
+function speak(text){if(!('speechSynthesis'in window))return; speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.rate=.94;u.pitch=.9;speechSynthesis.speak(u)}
+function showQuestion(){if(current>=questions.length){finish();return} $('phase').textContent=questions[current][0].toUpperCase();$('sectionStat').textContent=questions[current][0];$('question').textContent=questions[current][1];$('answer').value='';$('officerStatus').textContent='Please answer the question';$('progress').style.width=(current/questions.length*100)+'%';speak(questions[current][1]);}
+function nextQuestion(answer,skipped=false){
+ if(ended)return;
+ if(!skipped){answered++;history.push({q:questions[current][1],a:answer||'(No response entered)'});}
+ // Follow-up prompts are inserted when an answer is very short or contains a broad claim.
+ if(!skipped && answer.trim().split(/\s+/).length<12 && current<questions.length-1 && !questions[current][0].includes('follow-up')){
+   questions.splice(current+1,0,['Follow-up','Could you explain that further and give me a specific example?']);
+ }
+ $('count').textContent=answered;current++;showQuestion();
+}
+$('start').onclick=()=>{
+ questions=buildQuestions();seconds=2700;answered=0;history=[];current=0;ended=false;startedAt=Date.now();
+ $('setup').style.display='none';$('interview').style.display='block';$('report').style.display='none';
+ const officerProfiles=[
+  {title:'Army Officer',role:'Military-style interview practice',avatar:'AO',voice:'Good morning. I will be conducting your personal interview practice today. Please answer clearly and honestly.'},
+  {title:'Civilian Interviewing Officer',role:'Formal interview practice',avatar:'IO',voice:'Good morning. I will be conducting your personal interview practice today. Listen carefully and answer in your own words.'}
+ ];
+ selectedOfficer=officerProfiles[Math.floor(Math.random()*officerProfiles.length)];
+ $('officerTitle').textContent=selectedOfficer.title;
+ $('officerRole').textContent=selectedOfficer.role;
+ $('officerAvatar').textContent=selectedOfficer.avatar;
+ speak(selectedOfficer.voice);
+ showQuestion();timerId=setInterval(()=>{seconds--;let m=Math.floor(seconds/60),s=seconds%60;$('timer').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');if(seconds<=0)finish()},1000);
+};
+$('submit').onclick=()=>{const a=$('answer').value.trim();if(!a){$('officerStatus').textContent='Please enter an answer or choose Skip.';return}nextQuestion(a)};
+$('skip').onclick=()=>nextQuestion('',true);
+$('end').onclick=()=>{if(confirm('End this practice interview and view your report?'))finish()};
+$('cameraBtn').onclick=async()=>{try{stream=await navigator.mediaDevices.getUserMedia({video:true,audio:false});$('video').srcObject=stream;$('video').style.display='block';$('cameraText').style.display='none';$('cameraBtn').textContent='CAMERA ENABLED'}catch(e){$('cameraText').textContent='Camera permission unavailable. You can continue without video.'}};
+$('testVoice').onclick=()=>speak('Good morning. Please take your time. Tell me about yourself.');
+$('mic').onclick=()=>{
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SR){$('micStatus').textContent='Speech recognition is not supported in this browser. Please type your answer.';return}
+ recognition=new SR();recognition.lang='en-IN';recognition.interimResults=true;recognition.continuous=true;
+ $('micStatus').textContent='Listening... speak clearly. Click the microphone button again to stop.';
+ recognition.onresult=e=>{let text='';for(let i=0;i<e.results.length;i++)text+=e.results[i][0].transcript+' ';$('answer').value=text.trim()};
+ recognition.onerror=e=>$('micStatus').textContent='Microphone issue: '+e.error+'. You can type your answer.';
+ recognition.onend=()=>{ $('micStatus').textContent='Microphone stopped. Review the transcript before submitting.'};
+ recognition.start();$('mic').onclick=()=>{recognition.stop();$('mic').onclick=startMicButton};
+};
+function startMicButton(){$('mic').onclick=micStart}
+function micStart(){$('mic').onclick=arguments.callee; }
+function finish(){
+ if(ended)return;ended=true;clearInterval(timerId);if(recognition)try{recognition.stop()}catch(e){};if('speechSynthesis'in window)speechSynthesis.cancel();
+ if(stream)stream.getTracks().forEach(t=>t.stop());
+ $('interview').style.display='none';$('report').style.display='block';$('rCount').textContent=answered;
+ const elapsed=Math.max(0,Math.round((Date.now()-startedAt)/60000));$('rTime').textContent=elapsed+' min';
+ $('review').innerHTML=history.length?history.map((x,i)=>`<p><b>${i+1}. ${escapeHtml(x.q)}</b><br><span class="muted">${escapeHtml(x.a)}</span></p>`).join('<hr style="border-color:#263a55">'):'No answers were recorded.';
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+$('download').onclick=()=>{
+ const txt='SSB COMMAND — PRACTICE SESSION REPORT\n'+
+ 'Questions answered: '+answered+'\n\n'+history.map((x,i)=>(i+1)+'. '+x.q+'\n'+x.a).join('\n\n')+
+ '\n\nSelf-review: Check clarity, truthfulness, examples and consistency. This is not an official SSB assessment.';
+ const blob=new Blob([txt],{type:'text/plain'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='SSB-Command-Practice-Report.txt';a.click();URL.revokeObjectURL(url);
+};
+</script>
+</body></html>

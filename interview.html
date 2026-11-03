@@ -149,7 +149,91 @@ $('mic').onclick=()=>{
 };
 function startMicButton(){$('mic').onclick=micStart}
 function micStart(){$('mic').onclick=arguments.callee; }
-function finish(){
+async function finish(){
+ if(ended)return;
+
+ ended=true;
+ clearInterval(timerId);
+
+ if(recognition){
+   try{recognition.stop()}catch(e){}
+ }
+
+ if('speechSynthesis' in window){
+   speechSynthesis.cancel();
+ }
+
+ if(stream){
+   stream.getTracks().forEach(t=>t.stop());
+ }
+
+ $('interview').style.display='none';
+ $('report').style.display='block';
+
+ $('rCount').textContent=answered;
+
+ const endTime=new Date();
+ const elapsed=Math.max(
+   0,
+   Math.round((Date.now()-startedAt)/60000)
+ );
+
+ $('rTime').textContent=elapsed+' min';
+
+ $('review').innerHTML=history.length
+   ? history.map((x,i)=>
+       `<p><b>${i+1}. ${escapeHtml(x.q)}</b><br>
+       <span class="muted">${escapeHtml(x.a)}</span></p>`
+     ).join('<hr style="border-color:#263a55">')
+   : 'No answers were recorded.';
+
+ const saveStatus=document.createElement('p');
+ saveStatus.className='muted';
+ saveStatus.id='saveStatus';
+ saveStatus.textContent='Saving interview record...';
+
+ $('report').insertBefore(saveStatus,$('report').querySelector('.row'));
+
+ try{
+   if(!supabaseClient || !currentUser){
+     throw new Error('Student account is not available.');
+   }
+
+   const {error}=await supabaseClient
+     .from('interviews')
+     .insert({
+       user_id:currentUser.id,
+       interviewer_type:
+         selectedOfficer?.title==='Army Officer'
+           ? 'Army Officer'
+           : 'Civilian IO',
+       status:'completed',
+       started_at:new Date(startedAt).toISOString(),
+       ended_at:endTime.toISOString(),
+       report:{
+         candidate_name:$('name').value,
+         entry:$('entry').value,
+         education:$('education').value,
+         family:$('family').value,
+         hobbies:$('hobbies').value,
+         motivation:$('motivation').value,
+         traits:$('traits').value,
+         questions_answered:answered,
+         duration_minutes:elapsed,
+         answers:history
+       }
+     });
+
+   if(error) throw error;
+
+   saveStatus.textContent='Interview record saved successfully.';
+
+ }catch(error){
+   saveStatus.textContent='Could not save interview: '+error.message;
+ }
+
+ window.scrollTo({top:0,behavior:'smooth'});
+}{
  if(ended)return;ended=true;clearInterval(timerId);if(recognition)try{recognition.stop()}catch(e){};if('speechSynthesis'in window)speechSynthesis.cancel();
  if(stream)stream.getTracks().forEach(t=>t.stop());
  $('interview').style.display='none';$('report').style.display='block';$('rCount').textContent=answered;

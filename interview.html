@@ -78,6 +78,8 @@ main{max-width:1180px;margin:34px auto;padding:0 20px}.hero{display:flex;justify
 <script>
 const $=id=>document.getElementById(id);
 let stream=null,recognition=null,timerId=null,seconds=2700,answered=0,history=[],current=0,startedAt=0,questions=[],ended=false,selectedOfficer=null;
+let supabaseClient=null;
+let currentUser=null;
 const base=[
 ["Introduction","Tell me about yourself. Keep it brief and cover the important parts of your life."],
 ["Family","Tell me about your family. What have you learnt from them?"],
@@ -167,16 +169,41 @@ $('download').onclick=()=>{
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = 'https://bauelyrvenoxitbjfpoo.supabase.co';
-const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_eYIYZ_HbeOu2MyxizgXUlw_vQCuKbgf';
+const SUPABASE_PUBLISHABLE_KEY ='sb_publishable_eYIYZ_HbeOu2MyxizgXUlw_vQCuKbgf';
+
 (async()=>{
  const gate=document.getElementById('authGate');
- if(!SUPABASE_PUBLISHABLE_KEY || SUPABASE_PUBLISHABLE_KEY.includes('sb_publishable_eYIYZ_HbeOu2MyxizgXUlw_vQCuKbgf')){gate.textContent='Setup required: add your Supabase publishable key to both index.html and interview.html.';return;}add your Supabase publishable key to both index.html and interview.html.';return;}
- const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
- const {data:{session},error}=await client.auth.getSession();
- if(error||!session){location.replace('index.html#account');return;}
- gate.textContent='Signed in as '+session.user.email;
- document.querySelector('.hero').style.display='flex';
- document.getElementById('setup').style.display='grid';
+
+ try {
+   if (!SUPABASE_PUBLISHABLE_KEY ||
+       SUPABASE_PUBLISHABLE_KEY === 'sb_publishable_eYIYZ_HbeOu2MyxizgXUlw_vQCuKbgf') {
+     gate.textContent='Supabase configuration is incomplete.';
+     return;
+   }
+
+   supabaseClient=window.supabase.createClient(
+     SUPABASE_URL,
+     SUPABASE_PUBLISHABLE_KEY
+   );
+
+   const {data,error}=await supabaseClient.auth.getSession();
+
+   if(error) throw error;
+
+   if(!data.session){
+     location.replace('index.html#account');
+     return;
+   }
+
+   currentUser=data.session.user;
+
+   gate.textContent='Signed in as '+currentUser.email;
+   document.querySelector('.hero').style.display='flex';
+   document.getElementById('setup').style.display='grid';
+
+ } catch(error) {
+   gate.textContent='Account verification error: '+error.message;
+ }
 })();
 </script>
 

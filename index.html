@@ -55,9 +55,9 @@ main{max-width:1120px;margin:auto;padding:65px 22px}.hero{display:grid;grid-temp
 <script>
 // Replace the placeholder below with your project's exact Project URL and Publishable key.
 const SUPABASE_URL = 'https://bauelyrvenoxitbjfpoo.supabase.co';
-const SUPABASE_PUBLISHABLE_KEY = 'PASTE_YOUR_SB_PUBLISHABLE_KEY_HERE';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_eYIYZ_HbeOu2MyxizgXUlw_vQCuKbgf';
 const authMsg = document.getElementById('authMsg');
-const supabaseReady = SUPABASE_PUBLISHABLE_KEY !== 'PASTE_YOUR_SB_PUBLISHABLE_KEY_HERE';
+const supabaseReady = SUPABASE_PUBLISHABLE_KEY !== 'sb_publishable_eYIYZ_HbeOu2MyxizgXUlw_vQCuKbgf';
 let supabaseClient = null;
 if (supabaseReady) { supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY); }
 else { authMsg.textContent = 'Setup needed: add your Supabase publishable key in this file before using registration.'; }

@@ -14,11 +14,12 @@ main{max-width:1180px;margin:34px auto;padding:0 20px}.hero{display:flex;justify
 .note{font-size:12px;color:var(--muted);margin-top:12px}.camera{background:#050a11;border:1px solid #344963;border-radius:14px;overflow:hidden;aspect-ratio:16/9;display:grid;place-items:center;color:#8295ac}.camera video{width:100%;height:100%;object-fit:cover;display:none;transform:scaleX(-1)}
 .interview{display:none}.interview-layout{display:grid;grid-template-columns:1fr 300px;gap:18px}.officer{display:flex;gap:14px;align-items:center;margin-bottom:18px}.avatar{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#d9b36a,#73502c);display:grid;place-items:center;color:#172033;font-size:24px;font-weight:900}.question{font-size:24px;font-weight:750;line-height:1.3;margin:22px 0}.answer{min-height:130px}.timer{font-variant-numeric:tabular-nums;color:var(--gold);font-size:24px;font-weight:900}.stat{background:#0a1727;border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:10px}.stat strong{display:block;font-size:20px}.progress{height:7px;background:#24364d;border-radius:20px;overflow:hidden;margin-top:12px}.progress div{height:100%;width:0;background:var(--green);transition:width .3s}.report{display:none}.report h2{color:var(--green)}.report-box{background:#091525;border:1px solid var(--line);padding:15px;border-radius:12px;margin:10px 0}.footer{color:#72859d;text-align:center;padding:30px 10px;font-size:12px}
 @media(max-width:850px){.grid,.interview-layout{grid-template-columns:1fr}.hero{display:block}.row{grid-template-columns:1fr}.card{padding:17px}}
+#setup,#interview,#report,.hero{display:none}
 </style>
 </head>
 <body>
 <header><div class="brand">SSB <span>COMMAND</span></div><div class="badge">PRACTICE SIMULATOR · BETA</div></header>
-<main>
+<main><div id="authGate" class="card" style="margin-bottom:18px">Checking your SSB COMMAND account...</div>
 <section class="hero">
  <div><div class="eyebrow">OFFICER-LIKE INTERVIEW PRACTICE</div><h1>Prepare with purpose.<br><span style="color:var(--gold)">Answer with clarity.</span></h1><p>A browser-based mock SSB personal interview with a 45-minute session, webcam preview, spoken questions, microphone input, follow-up questions and a practice report.</p></div>
 </section>
@@ -162,4 +163,21 @@ $('download').onclick=()=>{
  const blob=new Blob([txt],{type:'text/plain'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='SSB-Command-Practice-Report.txt';a.click();URL.revokeObjectURL(url);
 };
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://bauelyrvenoxitbjfpoo.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'PASTE_YOUR_SB_PUBLISHABLE_KEY_HERE';
+(async()=>{
+ const gate=document.getElementById('authGate');
+ if(SUPABASE_PUBLISHABLE_KEY==='PASTE_YOUR_SB_PUBLISHABLE_KEY_HERE'){gate.textContent='Setup required: add your Supabase publishable key to both index.html and interview.html.';return;}
+ const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+ const {data:{session},error}=await client.auth.getSession();
+ if(error||!session){location.replace('index.html#account');return;}
+ gate.textContent='Signed in as '+session.user.email;
+ document.querySelector('.hero').style.display='flex';
+ document.getElementById('setup').style.display='grid';
+})();
+</script>
+
 </body></html>

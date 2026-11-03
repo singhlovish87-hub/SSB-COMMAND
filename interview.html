@@ -170,7 +170,7 @@ const SUPABASE_URL = 'https://bauelyrvenoxitbjfpoo.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_eYIYZ_HbeOu2MyxizgXUlw_vQCuKbgf';
 (async()=>{
  const gate=document.getElementById('authGate');
- if(!SUPABASE_PUBLISHABLE_KEY || SUPABASE_PUBLISHABLE_KEY.includes('PASTE_YOUR')){gate.textContent='Setup required: add your Supabase publishable key to both index.html and interview.html.';return;}add your Supabase publishable key to both index.html and interview.html.';return;}
+ if(!SUPABASE_PUBLISHABLE_KEY || SUPABASE_PUBLISHABLE_KEY.includes('sb_publishable_eYIYZ_HbeOu2MyxizgXUlw_vQCuKbgf')){gate.textContent='Setup required: add your Supabase publishable key to both index.html and interview.html.';return;}add your Supabase publishable key to both index.html and interview.html.';return;}
  const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
  const {data:{session},error}=await client.auth.getSession();
  if(error||!session){location.replace('index.html#account');return;}

@@ -57,7 +57,7 @@ main{max-width:1120px;margin:auto;padding:65px 22px}.hero{display:grid;grid-temp
 const SUPABASE_URL = 'https://bauelyrvenoxitbjfpoo.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_eYIYZ_HbeOu2MyxizgXUlw_vQCuKbgf';
 const authMsg = document.getElementById('authMsg');
-const supabaseReady = !!SUPABASE_PUBLISHABLE_KEY && !SUPABASE_PUBLISHABLE_KEY.includes('PASTE_YOUR_PUBLISHABLE_KEY_HERE');
+const supabaseReady = !!SUPABASE_PUBLISHABLE_KEY && !SUPABASE_PUBLISHABLE_KEY.includes(sb_publishable_eYIYZ_HbeOu2MyxizgXUlw_vQCuKbgf);
 let supabaseClient = null;
 if (supabaseReady) { supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY); }
 else { authMsg.textContent = 'Setup needed: add your Supabase publishable key in this file before using registration.'; }
